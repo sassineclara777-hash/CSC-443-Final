@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     [Header("HUD UI")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI highScoreText;
+    [SerializeField] private TextMeshProUGUI coinText;
 
     [Header("Game Over UI")]
     [SerializeField] private GameObject gameOverPanel;
@@ -26,6 +27,7 @@ public class GameManager : MonoBehaviour
     public float ScrollSpeed { get; private set; }
     public float Distance { get; private set; }
     public bool IsGameOver { get; private set; }
+    public int Coins { get; private set; }
 
     private int _highScore;
 
@@ -60,6 +62,7 @@ public class GameManager : MonoBehaviour
 
         UpdateScoreText();
         UpdateHighScoreText();
+        UpdateCoinText();
     }
 
     void Update()
@@ -75,6 +78,14 @@ public class GameManager : MonoBehaviour
         Distance += ScrollSpeed * Time.deltaTime;
 
         UpdateScoreText();
+    }
+
+    public void AddCoin()
+    {
+        if (IsGameOver) return;
+
+        Coins++;
+        UpdateCoinText();
     }
 
     private void UpdateScoreText()
@@ -95,6 +106,14 @@ public class GameManager : MonoBehaviour
         if (gameOverHighScoreText != null)
         {
             gameOverHighScoreText.text = "Best: " + _highScore;
+        }
+    }
+
+    private void UpdateCoinText()
+    {
+        if (coinText != null)
+        {
+            coinText.text = "Coins: " + Coins;
         }
     }
 
