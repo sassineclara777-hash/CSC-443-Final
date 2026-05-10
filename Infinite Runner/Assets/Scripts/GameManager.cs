@@ -6,12 +6,19 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
 
+    private const string HighScoreKey = "HighScore";
+
     [Header("Config")]
     [SerializeField] private GameConfig config;
+
+    [Header("HUD UI")]
+    [SerializeField] private TextMeshProUGUI scoreText;
+    [SerializeField] private TextMeshProUGUI highScoreText;
 
     [Header("Game Over UI")]
     [SerializeField] private GameObject gameOverPanel;
     [SerializeField] private TextMeshProUGUI finalScoreText;
+    [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
 
     [Header("Scenes")]
     [SerializeField] private string mainMenuSceneName = "MainMenu";
@@ -19,6 +26,8 @@ public class GameManager : MonoBehaviour
     public float ScrollSpeed { get; private set; }
     public float Distance { get; private set; }
     public bool IsGameOver { get; private set; }
+
+    private int _highScore;
 
     void Awake()
     {
@@ -33,6 +42,8 @@ public class GameManager : MonoBehaviour
         IsGameOver = false;
         Time.timeScale = 1f;
 
+        _highScore = PlayerPrefs.GetInt(HighScoreKey, 0);
+
         if (config != null)
         {
             ScrollSpeed = config.startSpeed;
@@ -46,6 +57,9 @@ public class GameManager : MonoBehaviour
         {
             gameOverPanel.SetActive(false);
         }
+
+        UpdateScoreText();
+        UpdateHighScoreText();
     }
 
     void Update()
@@ -59,6 +73,29 @@ public class GameManager : MonoBehaviour
         );
 
         Distance += ScrollSpeed * Time.deltaTime;
+
+        UpdateScoreText();
+    }
+
+    private void UpdateScoreText()
+    {
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + Mathf.FloorToInt(Distance);
+        }
+    }
+
+    private void UpdateHighScoreText()
+    {
+        if (highScoreText != null)
+        {
+            highScoreText.text = "Best: " + _highScore;
+        }
+
+        if (gameOverHighScoreText != null)
+        {
+            gameOverHighScoreText.text = "Best: " + _highScore;
+        }
     }
 
     public void GameOver()
@@ -68,6 +105,15 @@ public class GameManager : MonoBehaviour
         IsGameOver = true;
         ScrollSpeed = 0f;
 
+        int finalScore = Mathf.FloorToInt(Distance);
+
+        if (finalScore > _highScore)
+        {
+            _highScore = finalScore;
+            PlayerPrefs.SetInt(HighScoreKey, _highScore);
+            PlayerPrefs.Save();
+        }
+
         if (gameOverPanel != null)
         {
             gameOverPanel.SetActive(true);
@@ -75,8 +121,10 @@ public class GameManager : MonoBehaviour
 
         if (finalScoreText != null)
         {
-            finalScoreText.text = "Final Score: " + Mathf.FloorToInt(Distance).ToString();
+            finalScoreText.text = "Final Score: " + finalScore;
         }
+
+        UpdateHighScoreText();
     }
 
     public void RestartGame()
@@ -89,5 +137,14 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene(mainMenuSceneName);
+    }
+
+    public void ResetHighScore()
+    {
+        _highScore = 0;
+        PlayerPrefs.SetInt(HighScoreKey, _highScore);
+        PlayerPrefs.Save();
+
+        UpdateHighScoreText();
     }
 }
