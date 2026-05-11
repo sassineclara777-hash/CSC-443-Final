@@ -22,9 +22,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI finalScoreText;
     [SerializeField] private TextMeshProUGUI gameOverHighScoreText;
 
-    [Header("Scenes")]
-    [SerializeField] private string mainMenuSceneName = "MainMenu";
-
     public float ScrollSpeed { get; private set; }
     public float Distance { get; private set; }
     public bool IsGameOver { get; private set; }
@@ -69,9 +66,10 @@ public class GameManager : MonoBehaviour
     void Update()
     {
         if (Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame)
-{
-    RestartGame();
-}
+        {
+            RestartGame();
+        }
+
         if (IsGameOver) return;
         if (config == null) return;
 
@@ -160,7 +158,17 @@ public class GameManager : MonoBehaviour
     public void GoToMainMenu()
     {
         Time.timeScale = 1f;
-        SceneManager.LoadScene(mainMenuSceneName);
+
+        int previousSceneIndex = SceneManager.GetActiveScene().buildIndex - 1;
+
+        if (previousSceneIndex >= 0)
+        {
+            SceneManager.LoadScene(previousSceneIndex);
+        }
+        else
+        {
+            Debug.LogError("GameManager: No previous scene exists in Build Settings.");
+        }
     }
 
     public void ResetHighScore()

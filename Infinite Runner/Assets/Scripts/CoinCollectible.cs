@@ -25,6 +25,13 @@ public class CoinCollectible : MonoBehaviour
 
         if (other.CompareTag(playerTag))
         {
+            PlayerCoinVFX playerVFX = other.GetComponentInParent<PlayerCoinVFX>();
+
+            if (playerVFX != null)
+            {
+                playerVFX.PlayCoinCollectVFX();
+            }
+
             Collect();
         }
     }
