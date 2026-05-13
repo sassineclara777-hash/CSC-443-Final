@@ -61,6 +61,8 @@ public class PlayerController : MonoBehaviour
         {
             _yVel = jumpVelocity;
             _isGrounded = false;
+
+            MusicManager.Instance?.JumpSound();
         }
 
         _prevMove = v;

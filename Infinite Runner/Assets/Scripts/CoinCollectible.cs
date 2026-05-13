@@ -43,7 +43,10 @@ public class CoinCollectible : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.AddCoin();
+            
         }
+
+        MusicManager.Instance?.CoinPickupSound();
 
         if (_coinCollider != null)
         {

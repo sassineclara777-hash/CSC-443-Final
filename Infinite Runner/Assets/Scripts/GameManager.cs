@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
         }
 
         Instance = this;
+        
 
         IsGameOver = false;
         Time.timeScale = 1f;
@@ -62,6 +63,11 @@ public class GameManager : MonoBehaviour
         UpdateHighScoreText();
         UpdateCoinText();
     }
+
+    private void Start()
+{
+    MusicManager.Instance?.PlayGameplayMusic();
+}
 
     void Update()
     {
@@ -100,23 +106,20 @@ public class GameManager : MonoBehaviour
     }
 
     private void UpdateHighScoreText()
+{
+    if (highScoreText != null)
     {
-        if (highScoreText != null)
-        {
-            highScoreText.text = "Best: " + _highScore;
-        }
-
-        if (gameOverHighScoreText != null)
-        {
-            gameOverHighScoreText.text = "Best: " + _highScore;
-        }
+        highScoreText.text = "Best\n" + _highScore;
     }
+
+    if (gameOverHighScoreText != null) { gameOverHighScoreText.text = "Best: " + _highScore; }
+}
 
     private void UpdateCoinText()
     {
         if (coinText != null)
         {
-            coinText.text = "Coins: " + Coins;
+            coinText.text = "" + Coins;
         }
     }
 
@@ -140,6 +143,8 @@ public class GameManager : MonoBehaviour
         {
             gameOverPanel.SetActive(true);
         }
+
+        MusicManager.Instance?.GameOverSound();
 
         if (finalScoreText != null)
         {
