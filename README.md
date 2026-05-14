@@ -1,5 +1,4 @@
-# CSC 443 Final
-# Infinite Runner Extension
+# CSC 443 Final: Infinite Runner Extension
 ## Clara Sassine - 20231035
 
 ## Project Description
